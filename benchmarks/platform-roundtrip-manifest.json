@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "experiment": "BuildBeacon real-footage platform round trip",
+  "generatedAt": "2026-07-31T20:48:12.069Z",
+  "fixture": {
+    "receiptId": "6b3ba041e95d4a51da0da0f55965bf1d",
+    "envelopeBytes": 403,
+    "sourceBlocks": 7,
+    "blockSize": 64
+  },
+  "carrier": {
+    "source": "Playwright Chromium recording of the local BuildBeacon UI, normalized to lossless FFV1 before marker composition",
+    "durationSeconds": 12,
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "sha256": "42b44939e30f0e19e646de479bdbe04a2b0e61ebb9e66e438bb38eb00db830dd"
+  },
+  "uploadCases": [
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "markerWidth": 240,
+      "filename": "buildbeacon-static-240.mp4",
+      "relativePath": "bench-results/real-footage/uploads/buildbeacon-static-240.mp4",
+      "sha256": "019c60092a1b4a58d884e4f634849d832f7a11fb17271b0019de1d867295c3f6",
+      "bytes": 1112537
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "markerWidth": 240,
+      "filename": "buildbeacon-animated-240.mp4",
+      "relativePath": "bench-results/real-footage/uploads/buildbeacon-animated-240.mp4",
+      "sha256": "edd80526445c07f8a70567047bfad1f66a5854e85c0ceb69ca2fe4652f1cfd2a",
+      "bytes": 1034258
+    },
+    {
+      "testId": "static-260",
+      "transport": "static",
+      "markerWidth": 260,
+      "filename": "buildbeacon-static-260.mp4",
+      "relativePath": "bench-results/real-footage/uploads/buildbeacon-static-260.mp4",
+      "sha256": "0099980d8f07e6cd5ac3522be2f26f07f046325233ec06c4473448d37dd22660",
+      "bytes": 1174300
+    },
+    {
+      "testId": "animated-260",
+      "transport": "animated",
+      "markerWidth": 260,
+      "filename": "buildbeacon-animated-260.mp4",
+      "relativePath": "bench-results/real-footage/uploads/buildbeacon-animated-260.mp4",
+      "sha256": "c082dbd7b8991d04775d1d44ddec8aa57d0b7ae93b27ee1aab9d2aaf02d5cc6e",
+      "bytes": 1055692
+    },
+    {
+      "testId": "static-280",
+      "transport": "static",
+      "markerWidth": 280,
+      "filename": "buildbeacon-static-280.mp4",
+      "relativePath": "bench-results/real-footage/uploads/buildbeacon-static-280.mp4",
+      "sha256": "32ccf7849ffa340e707cf9e3ac1df17b978244f09ead6419808d05e7fdb9824b",
+      "bytes": 1185008
+    },
+    {
+      "testId": "animated-280",
+      "transport": "animated",
+      "markerWidth": 280,
+      "filename": "buildbeacon-animated-280.mp4",
+      "relativePath": "bench-results/real-footage/uploads/buildbeacon-animated-280.mp4",
+      "sha256": "9d012feda8c8c0e121917430e393aac83587fe18f7b41c9aa4177372c51a9cd5",
+      "bytes": 1024806
+    }
+  ],
+  "platformSlots": [
+    {
+      "id": "platform-a",
+      "status": "pending",
+      "platform": null
+    },
+    {
+      "id": "platform-b",
+      "status": "pending",
+      "platform": null
+    }
+  ],
+  "downloadNaming": "Keep or restore each original filename; the analyzer also accepts any extension when the basename begins with the test ID."
+}

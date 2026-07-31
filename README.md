@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/protocol-BBP%2F1-c8ff52)](docs/PROTOCOL.md)
 
-[Live demo](https://stoicpickle.github.io/buildbeacon/) · [Beacon Bench](docs/BEACON_BENCH.md) · [Protocol](docs/PROTOCOL.md) · [Threat model](docs/THREAT_MODEL.md) · [Test matrix](docs/TEST_MATRIX.md)
+[Live demo](https://stoicpickle.github.io/buildbeacon/) · [Beacon Bench](docs/BEACON_BENCH.md) · [Real-footage follow-up](docs/REAL_FOOTAGE_BENCH.md) · [Protocol](docs/PROTOCOL.md) · [Threat model](docs/THREAT_MODEL.md) · [Test matrix](docs/TEST_MATRIX.md)
 
 ![BuildBeacon public interface](docs/assets/buildbeacon-hero.png)
 
@@ -45,7 +45,17 @@ The test key is RFC 8032 public test material, and the receipt is explicitly a s
 - At 320 px in three-second excerpts, static recovered 73/73 while animated recovered 8/73 for the sequence-73 stream slice. The complete offline payload has a real collection-time cost.
 - The experimental identifier QR decoded in every excerpt and was fastest, but it contains only an ID and proves nothing about a resolver or returned provenance.
 
-The continuation decision is narrower than “animation wins”: for this 403-byte fixture, static was simpler at the tested 280 and 320 px sizes, while BBP/1 earned a real-footage follow-up at 240 px. Receipt size, stream phase, and untested marker widths can move that boundary. Real demo footage and real platform transcodes are required before this becomes a resilience claim.
+The continuation decision is narrower than “animation wins”: for this 403-byte fixture, static was simpler at the tested 280 and 320 px sizes, while BBP/1 earned a real-footage follow-up at 240 px. Receipt size, stream phase, and untested marker widths can move that boundary.
+
+## What the real-footage follow-up found
+
+[Real-footage Beacon Bench](docs/REAL_FOOTAGE_BENCH.md) replaced the generated carrier with a 12-second Chromium recording of BuildBeacon itself and tested the missing 260 px boundary. The controlled marker remained the only QR in the recording.
+
+- At 240 px, static BBR1 decoded from 0/96 sampled frames and recovered 0/49 six-second excerpts. Animated BBP/1 decoded from 96/96 frames and recovered 49/49, including after a second-generation CRF 35 transcode and 25% seeded sample erasure.
+- At 260 and 280 px, both transports recovered 49/49. Static was much faster once readable: p95 0.125 seconds versus 4.75 seconds for animated.
+- The demonstrated benefit occurs at 240 px but not at 260 px for this exact 403-byte receipt and decoder; the tested crossover lies between those widths. It is not evidence that animated transport is preferable when static QR already fits.
+
+The repository now produces six hash-pinned upload artifacts and includes a returned-video analyzer for two real platform round trips. Those slots remain unrun until the target platforms and posting visibility are explicitly chosen, so BuildBeacon still makes no named-platform survival claim.
 
 ## How it works
 
@@ -126,6 +136,7 @@ BuildBeacon does not authenticate the surrounding video, stop overlay copying or
 npm run check          # lint, coverage-gated protocol tests, web + CLI builds
 npm run demo:verify    # decode the H.264 fixture from pixels with ffmpeg + jsQR
 npm run test:e2e       # browser flow and mobile-overflow proof
+npm run bench:real     # recapture the browser carrier and rebuild the real-footage matrix
 npm audit --audit-level=high
 ```
 

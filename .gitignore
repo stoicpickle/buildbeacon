@@ -8,3 +8,4 @@ buildbeacon-key.json
 *.bb-private.json
 playwright-report/
 test-results/
+bench-results/
