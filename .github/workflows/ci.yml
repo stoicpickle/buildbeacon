@@ -40,7 +40,7 @@ jobs:
           node dist-cli/cli.js simulate --input "$fixture_dir/receipt.bb" --offset 73 --loss 0.30
 
   media-proof:
-    name: Recompressed pixel proof
+    name: Encoded pixel proof
     runs-on: ubuntu-latest
     steps:
       - name: Check out source
