@@ -1,1 +1,135 @@
-# buildbeacon
+# BuildBeacon
+
+**Visual, loss-tolerant transport for signed build receipts.**
+
+[![CI](https://github.com/stoicpickle/buildbeacon/actions/workflows/ci.yml/badge.svg)](https://github.com/stoicpickle/buildbeacon/actions/workflows/ci.yml)
+[![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
+[![Protocol](https://img.shields.io/badge/protocol-BBP%2F1-c8ff52)](docs/PROTOCOL.md)
+
+[Live demo](https://stoicpickle.github.io/buildbeacon/) · [Protocol](docs/PROTOCOL.md) · [Threat model](docs/THREAT_MODEL.md) · [Test matrix](docs/TEST_MATRIX.md)
+
+![BuildBeacon public interface](docs/assets/buildbeacon-hero.png)
+
+Build attestations normally disappear when someone screen-records a demo, trims the clip, or reposts only the pixels. BuildBeacon keeps a compact signed receipt in those pixels as a looping QR marker. A receiver can join between cycles, lose frames, reconstruct the canonical receipt, and check its Ed25519 signature without uploading the clip or contacting a lookup service.
+
+BuildBeacon is an experimental transport, not a video-authenticity system. A valid receipt signature does **not** prove that the surrounding footage came from the claimed artifact, and a public key carried inside its own envelope does **not** establish signer identity.
+
+## Run the six-second proof
+
+Open the [live demo](https://stoicpickle.github.io/buildbeacon/) and select **Run the 6-second proof**.
+
+The checked-in fixture is a real 1280×720 H.264 clip. It begins at fountain sequence 73, contains 48 rendered QR frames with 11 deliberate duplicates, and uses the same `jsQR` pixel-decoder path as uploaded clips. The current deterministic proof reconstructs after:
+
+- 11 sampled video frames;
+- 9 unique packets;
+- matrix rank 7/7;
+- a valid Ed25519 signature under the fixture’s public test key.
+
+![BuildBeacon recovering the checked-in six-second fixture](docs/assets/buildbeacon-recovery.png)
+
+Reproduce that proof locally:
+
+```bash
+npm ci
+npm run demo:verify
+```
+
+The test key is RFC 8032 public test material, and the receipt is explicitly a synthetic fixture over the repository’s real initial commit and its 13-byte README artifact. It is intentionally unsafe for real signing and provides no identity assurance.
+
+## How it works
+
+```text
+build claims ──dCBOR──> Ed25519 envelope ──BBP/1──> animated QR frames
+                                                              │
+verified receipt <── signature check <── matrix decode <── visible pixels
+```
+
+1. **Sign** — receipt claims are encoded as deterministic CBOR and signed with a domain-separated Ed25519 message.
+2. **Transmit** — BBP/1 splits the signed envelope into source blocks and emits systematic plus deterministic repair symbols.
+3. **Recover** — the receiver rejects corrupt or mixed frames and performs incremental Gaussian elimination over GF(2).
+4. **Inspect** — transport success, signature validity, and signer trust are presented as separate results.
+
+The marker offers three deliberately comparable forms: a short build ID, a self-contained static QR, and the loss-tolerant animated beacon. The animated form earns its visual cost only when join-late or missing-frame recovery matters.
+
+## Browser app
+
+Requirements: Node.js 22.12 or newer and npm.
+
+```bash
+npm ci
+npm run dev
+```
+
+The app provides:
+
+- **Transmit** — compose claims, create an ephemeral demo signature, choose a marker format, and download the signed receipt;
+- **Recover** — decode the checked-in proof, an uploaded clip, a static QR image, or an explicitly enabled camera entirely in the tab;
+- **Inspect** — review the recovered build claims, full signer fingerprint, signature status, and trust warning.
+
+The browser signer is for demonstrations only. Its key lives only in the tab and is discarded. Persistent signing belongs in the local CLI or a properly controlled signing system.
+
+## CLI
+
+Build the CLI:
+
+```bash
+npm run build:cli
+node dist-cli/cli.js --help
+```
+
+Create a receipt and signing key:
+
+```bash
+node dist-cli/cli.js demo --out receipt.json
+node dist-cli/cli.js keygen --out buildbeacon-key.json
+node dist-cli/cli.js create \
+  --input receipt.json \
+  --key buildbeacon-key.json \
+  --out receipt.bb
+```
+
+Verify and exercise the loss-tolerant transport:
+
+```bash
+node dist-cli/cli.js verify --input receipt.bb
+node dist-cli/cli.js simulate --input receipt.bb --offset 73 --loss 0.30
+node dist-cli/cli.js frames --input receipt.bb --out-dir beacon-frames --count 24
+```
+
+Private key files are created with mode `0600` on POSIX systems, are rejected when group/other permission bits are present, and are ignored by the repository’s common key-file patterns. Ignore rules are not key protection. The CLI never accepts private-key bytes through a command-line value or URL.
+Key generation is create-only and refuses to overwrite an existing path.
+
+## What it proves—and what it does not
+
+| Result | Meaning |
+|---|---|
+| Transport reconstructed | Enough valid, linearly independent frames produced an envelope whose digest matches the beacon ID. |
+| Signature valid | The exact canonical receipt matches the Ed25519 signature under the included public key. |
+| Trusted signer | Only available when a verifier pins that key through a separate trust decision. The demo does not do this. |
+
+BuildBeacon does not authenticate the surrounding video, stop overlay copying or replay, prove a commit existed, prove tests ran, establish timestamp freshness, distribute trust, rotate or revoke keys, or recover when the marker is cropped out or unreadable. Receipt contents are visible public data, not encryption.
+
+## Validation
+
+```bash
+npm run check          # lint, coverage-gated protocol tests, web + CLI builds
+npm run demo:verify    # decode the H.264 fixture from pixels with ffmpeg + jsQR
+npm run test:e2e       # browser flow and mobile-overflow proof
+npm audit --audit-level=high
+```
+
+The deterministic suite covers strict dCBOR round trips, an RFC 8032 known-answer vector, domain-separated receipt signatures, one-bit tampering, QR render/decode, CRC32C rejection, duplicate and mixed frames, join-late recovery, reordering, and fixed loss. Current protocol coverage thresholds are enforced in `vitest.config.ts`.
+
+## Status and scope
+
+BBP/1 is experimental and has not received an independent security audit. The implementation uses `@noble/ed25519` 3.x; that current rewrite likewise does not claim a new independent audit. See [PROTOCOL.md](docs/PROTOCOL.md) for the byte format and [THREAT_MODEL.md](docs/THREAT_MODEL.md) before using it as evidence.
+
+BuildBeacon complements—but does not currently parse, author, or verify—SLSA provenance, Sigstore bundles, GitHub artifact attestations, or C2PA manifests. A later receipt could bind the digest of one of those artifacts without replacing its native verifier.
+
+## Contributing
+
+Read [CONTRIBUTING.md](CONTRIBUTING.md). Security reports belong in a private GitHub Security Advisory as described in [SECURITY.md](SECURITY.md).
+
+## License
+
+Apache License 2.0. See [LICENSE](LICENSE) and [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES).

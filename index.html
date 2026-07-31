@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d1117" />
+    <meta name="referrer" content="no-referrer" />
+    <meta property="og:title" content="BuildBeacon — signed build receipts in the pixels" />
+    <meta property="og:description" content="Experimental visual, loss-tolerant transport for signed software-build receipts." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://stoicpickle.github.io/buildbeacon/" />
+    <meta name="twitter:card" content="summary" />
+    <link rel="icon" href="%BASE_URL%favicon.svg" type="image/svg+xml" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' blob: data:; media-src 'self' blob:; connect-src 'self'; worker-src 'self' blob:; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+    <meta
+      name="description"
+      content="Reconstruct a signed build receipt from enough decodable beacon frames."
+    />
+    <title>BuildBeacon — signed build receipts in the pixels</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

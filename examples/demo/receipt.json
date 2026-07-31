@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "repository": "https://github.com/stoicpickle/buildbeacon",
+  "commit": {
+    "algorithm": "git-sha1",
+    "value": "491b2ddf7a44d269ae5432de2d22255398abfa9d"
+  },
+  "treeState": "clean",
+  "artifact": {
+    "name": "initial-readme.md",
+    "sha256": "7b43b2c1d9c12a279c96eb322d2a183f022b8ae99da7ee3d48720b93e5c1fb8b",
+    "size": 13
+  },
+  "build": {
+    "builtAt": "2026-07-31T17:44:15.000Z",
+    "builder": "Synthetic BBP/1 fixture",
+    "runUrl": "https://github.com/stoicpickle/buildbeacon/commit/491b2ddf7a44d269ae5432de2d22255398abfa9d"
+  },
+  "checks": [
+    {
+      "name": "canonical fixture vector",
+      "result": "pass"
+    }
+  ]
+}

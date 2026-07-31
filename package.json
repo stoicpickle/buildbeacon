@@ -1,0 +1,86 @@
+{
+  "name": "buildbeacon",
+  "version": "0.1.0",
+  "description": "Visual, loss-tolerant transport for signed build receipts.",
+  "type": "module",
+  "private": true,
+  "license": "Apache-2.0",
+  "author": "Russ <https://github.com/stoicpickle>",
+  "homepage": "https://stoicpickle.github.io/buildbeacon/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stoicpickle/buildbeacon.git"
+  },
+  "keywords": [
+    "provenance",
+    "qr-code",
+    "ed25519",
+    "build-receipt",
+    "screen-recording"
+  ],
+  "bin": {
+    "buildbeacon": "dist-cli/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist-cli/index.d.ts",
+      "import": "./dist-cli/index.js"
+    }
+  },
+  "files": [
+    "dist-cli",
+    "LICENSE",
+    "README.md",
+    "SECURITY.md",
+    "THIRD_PARTY_NOTICES",
+    "docs/PROTOCOL.md",
+    "docs/THREAT_MODEL.md"
+  ],
+  "scripts": {
+    "dev": "vite",
+    "build:web": "tsc -b && vite build",
+    "build:cli": "tsup src/lib/index.ts --format esm --dts --out-dir dist-cli --clean --tsconfig tsconfig.app.json && tsup src/cli.ts --format esm --out-dir dist-cli --tsconfig tsconfig.app.json",
+    "build": "npm run build:web && npm run build:cli",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "demo:fixture": "tsx scripts/generate-demo-fixture.ts",
+    "demo:verify": "tsx scripts/verify-demo-fixture.ts",
+    "lint": "oxlint src --deny-warnings",
+    "check": "npm run lint && npm run test:coverage && npm run build",
+    "preview": "vite preview",
+    "cli": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@noble/ed25519": "^3.1.0",
+    "cbor2": "^2.2.1",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^24.10.0",
+    "@types/pngjs": "^6.0.5",
+    "@types/qrcode": "^1.5.6",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.4",
+    "@vitest/coverage-v8": "^4.1.10",
+    "oxlint": "^1.76.0",
+    "pngjs": "^7.0.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3",
+    "vite": "^8.2.0",
+    "vitest": "^4.1.10"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "overrides": {
+    "esbuild": "0.28.1"
+  }
+}

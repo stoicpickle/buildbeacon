@@ -1,0 +1,24 @@
+BuildBeacon direct runtime dependencies
+=====================================
+
+The following packages are redistributed in the browser or CLI build. Their
+licenses remain the property of their respective copyright holders.
+
+@noble/ed25519 3.1.0 — MIT License
+Copyright (c) 2019 Paul Miller (https://paulmillr.com)
+
+cbor2 2.3.0 — MIT License
+Copyright held by the cbor2 contributors.
+
+qrcode 1.5.4 — MIT License
+Copyright held by the node-qrcode contributors.
+
+React and React DOM 19.2.8 — MIT License
+Copyright (c) Meta Platforms, Inc. and affiliates.
+
+jsQR 1.4.0 — Apache License 2.0
+Copyright held by the jsQR contributors.
+
+Complete license texts are included in each installed package and in the
+corresponding source distributions. BuildBeacon itself is licensed under the
+Apache License 2.0 in LICENSE.

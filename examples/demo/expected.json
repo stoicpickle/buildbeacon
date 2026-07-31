@@ -1,0 +1,14 @@
+{
+  "protocol": "BBP/1",
+  "receiptId": "6b3ba041e95d4a51da0da0f55965bf1d",
+  "keyId": "sha256:21fe31dfa154a261626bf854046fd2271b7bed4b6abe45aa58877ef47f9721b9",
+  "startSequence": 73,
+  "sourceBlocks": 7,
+  "frames": 48,
+  "duplicateFrames": 11,
+  "durationSeconds": 6,
+  "resolution": "1280x720",
+  "codec": "H.264 CRF 27 yuv420p",
+  "staticFixture": "public/demo/buildbeacon-static.png",
+  "warning": "The key is a public RFC 8032 test vector and the receipt is an explicitly synthetic fixture over the real initial commit. Neither provides identity assurance."
+}

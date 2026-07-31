@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-cli/
+coverage/
+.DS_Store
+*.local
+buildbeacon-key.json
+*.bb-private.json
+playwright-report/
+test-results/
