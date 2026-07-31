@@ -158,7 +158,7 @@ The reproducible fixture uses:
 - `K = 7`, `B = 64`, start sequence `73`;
 - the public RFC 8032 test key, never a production key.
 
-See [`examples/demo/frame-0073.txt`](../examples/demo/frame-0073.txt), [`examples/demo/signed-receipt.bb`](../examples/demo/signed-receipt.bb), and [`examples/demo/expected.json`](../examples/demo/expected.json). Regenerate them with `npm run demo:fixture` and verify the recompressed video with `npm run demo:verify`.
+See [`examples/demo/frame-0073.txt`](../examples/demo/frame-0073.txt), [`examples/demo/signed-receipt.bb`](../examples/demo/signed-receipt.bb), and [`examples/demo/expected.json`](../examples/demo/expected.json). Regenerate them with `npm run demo:fixture` and verify the encoded video with `npm run demo:verify`.
 
 ## Compatibility policy
 

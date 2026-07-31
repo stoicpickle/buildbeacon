@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/protocol-BBP%2F1-c8ff52)](docs/PROTOCOL.md)
 
-[Live demo](https://stoicpickle.github.io/buildbeacon/) · [Protocol](docs/PROTOCOL.md) · [Threat model](docs/THREAT_MODEL.md) · [Test matrix](docs/TEST_MATRIX.md)
+[Live demo](https://stoicpickle.github.io/buildbeacon/) · [Beacon Bench](docs/BEACON_BENCH.md) · [Protocol](docs/PROTOCOL.md) · [Threat model](docs/THREAT_MODEL.md) · [Test matrix](docs/TEST_MATRIX.md)
 
 ![BuildBeacon public interface](docs/assets/buildbeacon-hero.png)
 
@@ -36,6 +36,17 @@ npm run demo:verify
 
 The test key is RFC 8032 public test material, and the receipt is explicitly a synthetic fixture over the repository’s real initial commit and its 13-byte README artifact. It is intentionally unsafe for real signing and provides no identity assurance.
 
+## What the first equal-footprint benchmark found
+
+[Beacon Bench 1](docs/BEACON_BENCH.md) compares the same signed receipt as a static BBR1 QR and an animated BBP/1 marker on the same 1280×720 moving carrier. A benchmark-only identifier QR provides an optical lower bound; it is not the shipped visible Build ID and no resolver is exercised. The matrix uses the transmitter’s 2 Hz default, full-frame pixel decoding, every sample-aligned excerpt start, two genuine H.264 transcodes, and identical 240, 280, and 320 px marker boxes.
+
+- At 320 px, static and animated both recovered 49/49 six-second CRF 18→27 excerpts with a 25% configured sample-erasure probability. We observed no recovery difference there; animated p95 was 4.75 seconds versus 0.125 seconds for static.
+- At 240 px, static recovered 0/49 while animated recovered 49/49 under both CRF 27 and CRF 35 transcodes. The static QR was already unreadable before H.264, so this is a clean density threshold that persisted through encoding—not evidence that recompression created the gap.
+- At 320 px in three-second excerpts, static recovered 73/73 while animated recovered 8/73 for the sequence-73 stream slice. The complete offline payload has a real collection-time cost.
+- The experimental identifier QR decoded in every excerpt and was fastest, but it contains only an ID and proves nothing about a resolver or returned provenance.
+
+The continuation decision is narrower than “animation wins”: for this 403-byte fixture, static was simpler at the tested 280 and 320 px sizes, while BBP/1 earned a real-footage follow-up at 240 px. Receipt size, stream phase, and untested marker widths can move that boundary. Real demo footage and real platform transcodes are required before this becomes a resilience claim.
+
 ## How it works
 
 ```text
@@ -49,7 +60,7 @@ verified receipt <── signature check <── matrix decode <── visible p
 3. **Recover** — the receiver rejects corrupt or mixed frames and performs incremental Gaussian elimination over GF(2).
 4. **Inspect** — transport success, signature validity, and signer trust are presented as separate results.
 
-The marker offers three deliberately comparable forms: a short build ID, a self-contained static QR, and the loss-tolerant animated beacon. The animated form earns its visual cost only when join-late or missing-frame recovery matters.
+The marker offers three deliberately comparable forms: a short build ID, a self-contained static QR, and the loss-tolerant animated beacon. The animated form earns its visual cost only when splitting the receipt into lower-density symbols makes a constrained marker readable and the clip is long enough to collect enough distinct symbols.
 
 ## Browser app
 
