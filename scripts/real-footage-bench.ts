@@ -122,9 +122,27 @@ interface BenchmarkReport {
     smallestWidthWithBothReliable: number | null
     smallestWidthWithAnimatedReliable: number | null
     summary: string
-    platformRoundTrips: 'prepared-not-run' | 'youtube-and-discord-complete'
+    platformRoundTrips: 'prepared-not-run' | 'partially-complete' | 'complete'
+    platforms?: string[]
+    platformSummary?: string
     platformResultPaths?: string[]
   }
+}
+
+interface PlatformAnalysis {
+  schemaVersion: 1
+  experiment: string
+  platform: string
+  analyzedAt: string
+  sourceManifestSha256: string
+  results: Array<{
+    testId: string
+    transport: Transport
+    markerWidth: number
+    uploadSha256: string
+    cells: CellResult[]
+    [key: string]: unknown
+  }>
 }
 
 const ROOT = resolve(import.meta.dirname, '..')
@@ -133,6 +151,7 @@ const OUTPUT_ROOT = join(ROOT, 'bench-results', 'real-footage')
 const UPLOAD_ROOT = join(OUTPUT_ROOT, 'uploads')
 const JSON_OUTPUT = join(ROOT, 'benchmarks', 'real-footage-bench.json')
 const MANIFEST_OUTPUT = join(ROOT, 'benchmarks', 'platform-roundtrip-manifest.json')
+const PUBLISHED_PLATFORM_ROOT = join(ROOT, 'benchmarks', 'platform-roundtrips')
 const MARKDOWN_OUTPUT = join(ROOT, 'docs', 'REAL_FOOTAGE_BENCH.md')
 const CONTACT_SHEET_OUTPUT = join(ROOT, 'docs', 'assets', 'real-footage-carrier.jpg')
 const MARKER_WIDTHS = [240, 260, 280] as const
@@ -510,12 +529,18 @@ function findCell(streams: StreamResult[], transport: Transport, width: number, 
 }
 
 function makeMarkdown(report: BenchmarkReport): string {
+  const completedPlatforms = report.interpretation.platforms ?? []
+  const bottomLine = [report.interpretation.summary, report.interpretation.platformSummary].filter(Boolean).join(' ')
+  const platformNames = completedPlatforms.map(platformDisplayName).join(' and ')
+  const platformLinks = (report.interpretation.platformResultPaths ?? []).map((path, index) => {
+    return `[${platformDisplayName(completedPlatforms[index] ?? basename(path, '.json'))}](../${path})`
+  }).join(', ')
   const lines = [
     '# Real-footage Beacon Bench',
     '',
     `**Question:** ${report.question}`,
     '',
-    `**Bottom line:** ${report.interpretation.summary}`,
+    `**Bottom line:** ${bottomLine}`,
     '',
     '![Four states from the browser-recorded BuildBeacon carrier](assets/real-footage-carrier.jpg)',
     '',
@@ -570,24 +595,33 @@ function makeMarkdown(report: BenchmarkReport): string {
     '',
     '## Platform round trips',
     '',
-    'Six exact upload artifacts and their SHA-256 hashes are recorded in [`../benchmarks/platform-roundtrip-manifest.json`](../benchmarks/platform-roundtrip-manifest.json). Two platform slots remain deliberately unnamed and unrun: publishing to external accounts requires an explicit platform and visibility choice. After downloading each returned set with its original test IDs, run:',
+    completedPlatforms.length === 0
+      ? 'Six exact upload artifacts and their SHA-256 hashes are recorded in [`../benchmarks/platform-roundtrip-manifest.json`](../benchmarks/platform-roundtrip-manifest.json). Two platform slots remain deliberately unnamed and unrun: publishing to external accounts requires an explicit platform and visibility choice. After downloading each returned set with its original test IDs, run:'
+      : `Six exact upload artifacts and their SHA-256 hashes are recorded in [\`../benchmarks/platform-roundtrip-manifest.json\`](../benchmarks/platform-roundtrip-manifest.json). Completed return paths: ${platformNames}. Analyze another returned set with:`,
     '',
     '```sh',
     'npm run bench:platform -- <platform-slug> /absolute/path/to/download-directory',
     '```',
     '',
-    'The analyzer hashes every returned file, scans whole frames, verifies recovered signed bytes, and writes a per-platform JSON result under the ignored `bench-results/real-footage/returns/` directory.',
+    completedPlatforms.length === 0
+      ? 'The analyzer hashes every returned file, scans whole frames, verifies recovered signed bytes, and writes a per-platform JSON result under the ignored `bench-results/real-footage/returns/` directory.'
+      : `The analyzer hashes every returned file, scans whole frames, verifies recovered signed bytes, publishes a compact result under \`benchmarks/platform-roundtrips/\`, and updates this report. See [Platform Round Trips](PLATFORM_ROUND_TRIPS.md) and the machine-readable ${platformLinks}.`,
     '',
     '## What this does not establish',
     '',
-    '- No named social platform has been tested yet, so this report makes no platform-survival claim.',
+    completedPlatforms.length === 0
+      ? '- No named social platform has been tested yet, so this report makes no platform-survival claim.'
+      : `- The named-platform follow-up covers ${platformNames} through the exact documented return paths. It did not screen-record a player, crop the marker, or establish broad platform reliability.`,
     '- The visible receipt can still be copied onto unrelated footage; BuildBeacon is not a video-authenticity system.',
     '- One interface, codec stack, overlay position, receipt size, QR decoder, and recording resolution cannot establish broad reliability.',
     '',
-    `Machine-readable results: [real-footage-bench.json](../benchmarks/real-footage-bench.json). Exact upload hashes: [platform-roundtrip-manifest.json](../benchmarks/platform-roundtrip-manifest.json).`,
-    '',
+    `Machine-readable results: [real-footage-bench.json](../benchmarks/real-footage-bench.json)${platformLinks ? `, ${platformLinks}` : ''}. Exact upload hashes: [platform-roundtrip-manifest.json](../benchmarks/platform-roundtrip-manifest.json).`,
   )
   return `${lines.join('\n')}\n`
+}
+
+function platformDisplayName(platform: string): string {
+  return platform === 'youtube' ? 'YouTube' : platform.charAt(0).toUpperCase() + platform.slice(1)
 }
 
 async function writeContactSheet(carrier: string): Promise<void> {
@@ -692,9 +726,9 @@ async function runExperiment(): Promise<void> {
     const summary = smallestWidthWithAnimatedReliable === null
       ? 'BBP/1 did not maintain 95% recovery across all three local media paths at any tested size; do not spend platform-test effort until the optical path improves.'
       : smallestWidthWithBothReliable === null
-        ? `At the smallest tested width, ${smallestWidthWithAnimatedReliable} px, BBP/1 maintained at least 95% recovery through CRF 35 while static BBR1 never did across the tested range. The observed width advantage survives a real browser carrier and earns the prepared platform round trips.`
+        ? `At the smallest tested width, ${smallestWidthWithAnimatedReliable} px, BBP/1 maintained at least 95% recovery through CRF 35 while static BBR1 never did across the tested range. The observed width advantage survives a real browser carrier.`
         : smallestWidthWithAnimatedReliable < smallestWidthWithBothReliable
-          ? `BBP/1 maintained at least 95% recovery through CRF 35 at ${smallestWidthWithAnimatedReliable} px; both transports reached the same bar at ${smallestWidthWithBothReliable} px. The tested crossover lies between those widths on a real browser carrier and earns the prepared platform round trips.`
+          ? `BBP/1 maintained at least 95% recovery through CRF 35 at ${smallestWidthWithAnimatedReliable} px; both transports reached the same bar at ${smallestWidthWithBothReliable} px. The tested crossover lies between those widths on a real browser carrier.`
           : `Both transports maintained at least 95% recovery through CRF 35 at the smallest reliable tested width, ${smallestWidthWithBothReliable} px. BBP/1 showed no smaller reliable footprint in this test set, so platform tests should focus on durability rather than a width claim.`
 
     const generatedAt = new Date().toISOString()
@@ -762,6 +796,7 @@ async function runExperiment(): Promise<void> {
     }
 
     await mkdir(join(ROOT, 'benchmarks'), { recursive: true })
+    await rm(PUBLISHED_PLATFORM_ROOT, { recursive: true, force: true })
     await writeFile(JSON_OUTPUT, `${JSON.stringify(report, null, 2)}\n`)
     await writeFile(MANIFEST_OUTPUT, `${JSON.stringify(manifest, null, 2)}\n`)
     await writeFile(MARKDOWN_OUTPUT, makeMarkdown(report))
@@ -785,11 +820,67 @@ async function findReturnedVideo(directory: string, testId: string, originalFile
   const names = await readdir(directory)
   const exact = names.find((name) => name === originalFilename)
   if (exact) return join(directory, exact)
-  const prefixMatches = names.filter((name) => name.startsWith(testId) || name.startsWith(`buildbeacon-${testId}.`))
+  const prefixMatches = names.filter((name) => name.startsWith(testId) || name.startsWith(`buildbeacon-${testId}`))
   if (prefixMatches.length !== 1) {
     throw new Error(`Expected one returned file for ${testId} in ${directory}; found ${prefixMatches.length}`)
   }
   return join(directory, prefixMatches[0]!)
+}
+
+async function publishPlatformAnalysis(manifest: PlatformManifest, analysis: PlatformAnalysis): Promise<string> {
+  const resultPath = `benchmarks/platform-roundtrips/${analysis.platform}.json`
+  const existingSlot = manifest.platformSlots.findIndex((slot) => slot.status === 'complete' && slot.platform === analysis.platform)
+  const pendingSlot = manifest.platformSlots.findIndex((slot) => slot.status === 'pending')
+  const slotIndex = existingSlot >= 0 ? existingSlot : pendingSlot
+  if (slotIndex < 0) throw new Error(`No platform slot is available for ${analysis.platform}`)
+  manifest.platformSlots[slotIndex] = { id: manifest.platformSlots[slotIndex]!.id, status: 'complete', platform: analysis.platform, result: resultPath }
+
+  const completedSlots = manifest.platformSlots.filter((slot): slot is Extract<PlatformManifest['platformSlots'][number], { status: 'complete' }> => slot.status === 'complete')
+  const analyses: PlatformAnalysis[] = []
+
+  for (const slot of completedSlots) {
+    const publishedPath = join(ROOT, slot.result)
+    const completedAnalysis = slot.platform === analysis.platform
+      ? analysis
+      : JSON.parse(await readFile(publishedPath, 'utf8')) as PlatformAnalysis
+    for (const uploadCase of manifest.uploadCases) {
+      const result = completedAnalysis.results.find((candidate) => candidate.testId === uploadCase.testId)
+      if (!result || result.uploadSha256 !== uploadCase.sha256) {
+        throw new Error(`Published ${slot.platform} result does not match the current upload manifest: ${uploadCase.testId}`)
+      }
+    }
+    analyses.push(completedAnalysis)
+  }
+
+  const report = JSON.parse(await readFile(JSON_OUTPUT, 'utf8')) as BenchmarkReport
+  const introducedAdditionalFailures = analyses.some((completedAnalysis) => completedAnalysis.results.some((result) => {
+    return result.cells.some((cell) => {
+      const baseline = findCell(report.streams, result.transport, result.markerWidth, 'upload-source', cell.erasureProbability)
+      return cell.successes < baseline.successes
+    })
+  }))
+  const platforms = completedSlots.map((slot) => slot.platform)
+  const labels = platforms.map(platformDisplayName).join(' and ')
+  report.interpretation.platformRoundTrips = completedSlots.length === manifest.platformSlots.length ? 'complete' : 'partially-complete'
+  report.interpretation.platforms = platforms
+  report.interpretation.platformResultPaths = completedSlots.map((slot) => slot.result)
+  report.interpretation.platformSummary = introducedAdditionalFailures
+    ? `${labels} introduced additional recovery failures in the tested return paths; inspect the platform results before making a durability claim.`
+    : `${labels} introduced no additional recovery failures in the tested return paths.`
+
+  await writeFile(MANIFEST_OUTPUT, `${JSON.stringify(manifest, null, 2)}\n`)
+  const manifestSha256 = await sha256File(MANIFEST_OUTPUT)
+  await mkdir(PUBLISHED_PLATFORM_ROOT, { recursive: true })
+  await mkdir(join(OUTPUT_ROOT, 'returns'), { recursive: true })
+  for (const completedAnalysis of analyses) {
+    completedAnalysis.sourceManifestSha256 = manifestSha256
+    const serialized = `${JSON.stringify(completedAnalysis, null, 2)}\n`
+    await writeFile(join(PUBLISHED_PLATFORM_ROOT, `${completedAnalysis.platform}.json`), serialized)
+    await writeFile(join(OUTPUT_ROOT, 'returns', `${completedAnalysis.platform}.json`), serialized)
+  }
+  await writeFile(JSON_OUTPUT, `${JSON.stringify(report, null, 2)}\n`)
+  await writeFile(MARKDOWN_OUTPUT, makeMarkdown(report))
+  return join(ROOT, resultPath)
 }
 
 async function analyzePlatform(platform: string, directory: string): Promise<void> {
@@ -837,18 +928,15 @@ async function analyzePlatform(platform: string, directory: string): Promise<voi
       })
       console.log('done')
     }
-    const output = {
+    const output: PlatformAnalysis = {
       schemaVersion: 1,
       experiment: manifest.experiment,
       platform,
       analyzedAt: new Date().toISOString(),
-      sourceManifestSha256: await sha256File(MANIFEST_OUTPUT),
+      sourceManifestSha256: '',
       results,
     }
-    const returnDirectory = join(OUTPUT_ROOT, 'returns')
-    await mkdir(returnDirectory, { recursive: true })
-    const outputPath = join(returnDirectory, `${platform}.json`)
-    await writeFile(outputPath, `${JSON.stringify(output, null, 2)}\n`)
+    const outputPath = await publishPlatformAnalysis(manifest, output)
     console.log(JSON.stringify({ output: outputPath, results }, null, 2))
   } finally {
     await rm(temporaryDirectory, { recursive: true, force: true })

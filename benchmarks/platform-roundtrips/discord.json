@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "experiment": "BuildBeacon real-footage platform round trip",
   "platform": "discord",
-  "analyzedAt": "2026-08-01T03:19:40.427Z",
+  "analyzedAt": "2026-08-01T03:38:14.787Z",
   "sourceManifestSha256": "d817333439c42a7b4b450a3066375144c6b540deb0cd326f4b2020ada6410a6e",
   "results": [
     {
