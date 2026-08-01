@@ -75,13 +75,15 @@
   "platformSlots": [
     {
       "id": "platform-a",
-      "status": "pending",
-      "platform": null
+      "status": "complete",
+      "platform": "youtube",
+      "result": "benchmarks/platform-roundtrips/youtube.json"
     },
     {
       "id": "platform-b",
-      "status": "pending",
-      "platform": null
+      "status": "complete",
+      "platform": "discord",
+      "result": "benchmarks/platform-roundtrips/discord.json"
     }
   ],
   "downloadNaming": "Keep or restore each original filename; the analyzer also accepts any extension when the basename begins with the test ID."

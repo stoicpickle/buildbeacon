@@ -6,7 +6,7 @@
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 [![Protocol](https://img.shields.io/badge/protocol-BBP%2F1-c8ff52)](docs/PROTOCOL.md)
 
-[Live demo](https://stoicpickle.github.io/buildbeacon/) · [Beacon Bench](docs/BEACON_BENCH.md) · [Real-footage follow-up](docs/REAL_FOOTAGE_BENCH.md) · [Protocol](docs/PROTOCOL.md) · [Threat model](docs/THREAT_MODEL.md) · [Test matrix](docs/TEST_MATRIX.md)
+[Live demo](https://stoicpickle.github.io/buildbeacon/) · [Beacon Bench](docs/BEACON_BENCH.md) · [Real-footage follow-up](docs/REAL_FOOTAGE_BENCH.md) · [Platform round trips](docs/PLATFORM_ROUND_TRIPS.md) · [Protocol](docs/PROTOCOL.md) · [Threat model](docs/THREAT_MODEL.md) · [Test matrix](docs/TEST_MATRIX.md)
 
 ![BuildBeacon public interface](docs/assets/buildbeacon-hero.png)
 
@@ -55,7 +55,7 @@ The continuation decision is narrower than “animation wins”: for this 403-by
 - At 260 and 280 px, both transports recovered 49/49. Static was much faster once readable: p95 0.125 seconds versus 4.75 seconds for animated.
 - The demonstrated benefit occurs at 240 px but not at 260 px for this exact 403-byte receipt and decoder; the tested crossover lies between those widths. It is not evidence that animated transport is preferable when static QR already fits.
 
-The repository now produces six hash-pinned upload artifacts and includes a returned-video analyzer for two real platform round trips. Those slots remain unrun until the target platforms and posting visibility are explicitly chosen, so BuildBeacon still makes no named-platform survival claim.
+The six hash-pinned artifacts were also exercised through [YouTube and Discord](docs/PLATFORM_ROUND_TRIPS.md). YouTube returned byte-different H.264 streams; Discord returned byte-different files with bit-identical H.264 streams. Neither path introduced an additional recovery failure: the 240 px static marker was already unreadable at source, the 240 px animated marker recovered 49/49 excerpts, and both transports recovered 49/49 at 260 and 280 px. This is one bounded upload/download experiment, not a broad claim about either platform or screen-recorded playback.
 
 ## How it works
 

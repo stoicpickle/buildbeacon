@@ -81,7 +81,10 @@ interface PlatformManifest {
     sha256: string
   }
   uploadCases: UploadCase[]
-  platformSlots: Array<{ id: string; status: 'pending'; platform: null }>
+  platformSlots: Array<
+    | { id: string; status: 'pending'; platform: null }
+    | { id: string; status: 'complete'; platform: string; result: string }
+  >
   downloadNaming: string
 }
 
@@ -119,7 +122,8 @@ interface BenchmarkReport {
     smallestWidthWithBothReliable: number | null
     smallestWidthWithAnimatedReliable: number | null
     summary: string
-    platformRoundTrips: 'prepared-not-run'
+    platformRoundTrips: 'prepared-not-run' | 'youtube-and-discord-complete'
+    platformResultPaths?: string[]
   }
 }
 
@@ -206,6 +210,16 @@ function seconds(value: number | null): string {
 
 async function sha256File(path: string): Promise<string> {
   return createHash('sha256').update(await readFile(path)).digest('hex')
+}
+
+function sha256VideoStream(path: string): string {
+  const output = run('ffmpeg', [
+    '-hide_banner', '-loglevel', 'error', '-i', path,
+    '-map', '0:v:0', '-c', 'copy', '-f', 'hash', '-hash', 'sha256', '-',
+  ])
+  const match = /^SHA256=([a-f0-9]{64})$/imu.exec(output.trim())
+  if (!match) throw new Error(`Could not hash the video stream in ${path}`)
+  return match[1]!
 }
 
 async function packageVersion(name: string): Promise<string> {
@@ -796,14 +810,25 @@ async function analyzePlatform(platform: string, directory: string): Promise<voi
       for (const erasure of ERASURE_RATES) {
         cells.push(await evaluateCell(uploadCase.transport, decodedFrames, erasure, envelope, source.id, staticText))
       }
+      const uploadPath = join(ROOT, uploadCase.relativePath)
+      const uploadSha256 = await sha256File(uploadPath)
+      if (uploadSha256 !== uploadCase.sha256) {
+        throw new Error(`Upload artifact does not match the manifest: ${uploadCase.relativePath}`)
+      }
+      const returnedSha256 = await sha256File(returnedPath)
+      const uploadVideoStreamSha256 = sha256VideoStream(uploadPath)
+      const returnedVideoStreamSha256 = sha256VideoStream(returnedPath)
       results.push({
         testId: uploadCase.testId,
         transport: uploadCase.transport,
         markerWidth: uploadCase.markerWidth,
         uploadSha256: uploadCase.sha256,
         returnedFilename: basename(returnedPath),
-        returnedSha256: await sha256File(returnedPath),
-        byteIdenticalToUpload: await sha256File(returnedPath) === uploadCase.sha256,
+        returnedSha256,
+        byteIdenticalToUpload: returnedSha256 === uploadCase.sha256,
+        uploadVideoStreamSha256,
+        returnedVideoStreamSha256,
+        videoStreamIdenticalToUpload: returnedVideoStreamSha256 === uploadVideoStreamSha256,
         returnedBytes: (await stat(returnedPath)).size,
         sampledFrames: decodedFrames.length,
         qrDecodedFrames: decodedFrames.filter(Boolean).length,

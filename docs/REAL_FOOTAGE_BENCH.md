@@ -2,7 +2,7 @@
 
 **Question:** Does the 240–280 px static-versus-animated crossover survive a real BuildBeacon browser recording, and are the exact artifacts ready for two platform round trips?
 
-**Bottom line:** BBP/1 maintained at least 95% recovery through CRF 35 at 240 px; both transports reached the same bar at 260 px. The tested crossover lies between those widths on a real browser carrier and earns the prepared platform round trips.
+**Bottom line:** BBP/1 maintained at least 95% recovery through CRF 35 at 240 px; both transports reached the same bar at 260 px. The tested crossover lies between those widths on a real browser carrier. The prepared artifacts were subsequently exercised through [YouTube and Discord](PLATFORM_ROUND_TRIPS.md).
 
 ![Four states from the browser-recorded BuildBeacon carrier](assets/real-footage-carrier.jpg)
 
@@ -57,7 +57,7 @@ npm run bench:real
 
 ## Platform round trips
 
-Six exact upload artifacts and their SHA-256 hashes are recorded in [`../benchmarks/platform-roundtrip-manifest.json`](../benchmarks/platform-roundtrip-manifest.json). Two platform slots remain deliberately unnamed and unrun: publishing to external accounts requires an explicit platform and visibility choice. After downloading each returned set with its original test IDs, run:
+Six exact upload artifacts and their SHA-256 hashes are recorded in [`../benchmarks/platform-roundtrip-manifest.json`](../benchmarks/platform-roundtrip-manifest.json). The artifacts were uploaded to YouTube and Discord, downloaded, and analyzed with:
 
 ```sh
 npm run bench:platform -- <platform-slug> /absolute/path/to/download-directory
@@ -65,10 +65,12 @@ npm run bench:platform -- <platform-slug> /absolute/path/to/download-directory
 
 The analyzer hashes every returned file, scans whole frames, verifies recovered signed bytes, and writes a per-platform JSON result under the ignored `bench-results/real-footage/returns/` directory.
 
+The bounded findings and compact machine-readable snapshots are published in [Platform Round Trips](PLATFORM_ROUND_TRIPS.md).
+
 ## What this does not establish
 
-- No named social platform has been tested yet, so this report makes no platform-survival claim.
+- The named-platform follow-up tested one YouTube download rendition and one Discord attachment-download path. It did not screen-record either player, crop the marker, or establish broad platform reliability.
 - The visible receipt can still be copied onto unrelated footage; BuildBeacon is not a video-authenticity system.
 - One interface, codec stack, overlay position, receipt size, QR decoder, and recording resolution cannot establish broad reliability.
 
-Machine-readable results: [real-footage-bench.json](../benchmarks/real-footage-bench.json). Exact upload hashes: [platform-roundtrip-manifest.json](../benchmarks/platform-roundtrip-manifest.json).
+Machine-readable results: [real-footage-bench.json](../benchmarks/real-footage-bench.json), [YouTube](../benchmarks/platform-roundtrips/youtube.json), and [Discord](../benchmarks/platform-roundtrips/discord.json). Exact upload hashes: [platform-roundtrip-manifest.json](../benchmarks/platform-roundtrip-manifest.json).

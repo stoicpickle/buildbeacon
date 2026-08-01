@@ -971,7 +971,11 @@
     ],
     "smallestWidthWithBothReliable": 260,
     "smallestWidthWithAnimatedReliable": 240,
-    "summary": "BBP/1 maintained at least 95% recovery through CRF 35 at 240 px; both transports reached the same bar at 260 px. The tested crossover lies between those widths on a real browser carrier and earns the prepared platform round trips.",
-    "platformRoundTrips": "prepared-not-run"
+    "summary": "BBP/1 maintained at least 95% recovery through CRF 35 at 240 px; both transports reached the same bar at 260 px. The tested crossover lies between those widths on a real browser carrier. YouTube and Discord round trips introduced no additional recovery failures in the tested upload/download paths.",
+    "platformRoundTrips": "youtube-and-discord-complete",
+    "platformResultPaths": [
+      "benchmarks/platform-roundtrips/youtube.json",
+      "benchmarks/platform-roundtrips/discord.json"
+    ]
   }
 }
