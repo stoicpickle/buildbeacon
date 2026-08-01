@@ -1,0 +1,986 @@
+{
+  "schemaVersion": 1,
+  "benchmark": "Real-footage Beacon Bench",
+  "generatedAt": "2026-07-31T20:48:12.069Z",
+  "question": "Does the 240–280 px static-versus-animated crossover survive a real BuildBeacon browser recording, and are the exact artifacts ready for two platform round trips?",
+  "fixture": {
+    "receiptId": "6b3ba041e95d4a51da0da0f55965bf1d",
+    "envelopeBytes": 403,
+    "sourceBlocks": 7,
+    "blockSize": 64,
+    "warning": "Public RFC 8032 test key and demo receipt; no identity or footage-authenticity assurance."
+  },
+  "carrier": {
+    "source": "Playwright Chromium recording of the local BuildBeacon UI, normalized to lossless FFV1 before marker composition",
+    "durationSeconds": 12,
+    "width": 1280,
+    "height": 720,
+    "fps": 30,
+    "sha256": "42b44939e30f0e19e646de479bdbe04a2b0e61ebb9e66e438bb38eb00db830dd",
+    "contactSheet": "docs/assets/real-footage-carrier.jpg"
+  },
+  "config": {
+    "seed": "buildbeacon-real-footage-v1",
+    "sampleFps": 8,
+    "symbolRate": 2,
+    "startSequence": 73,
+    "markerWidths": [
+      240,
+      260,
+      280
+    ],
+    "excerptSeconds": 6,
+    "erasureProbabilities": [
+      0,
+      0.25
+    ],
+    "excerptStarts": "all-sample-aligned",
+    "markerPosition": "bottom-right, 56px inset",
+    "qrErrorCorrection": "M",
+    "quietZoneModules": 4,
+    "mediaProfiles": [
+      {
+        "id": "upload-source",
+        "description": "H.264 CRF 18 marker composition over the normalized Chromium recording"
+      },
+      {
+        "id": "local-crf27",
+        "description": "Second-generation H.264 CRF 27 transcode of the upload source"
+      },
+      {
+        "id": "local-crf35",
+        "description": "Second-generation H.264 CRF 35 transcode of the upload source"
+      }
+    ]
+  },
+  "tools": {
+    "node": "v25.9.0",
+    "playwright": "1.62.1",
+    "chromium": "151.0.7922.34",
+    "ffmpeg": "8.1",
+    "qrcode": "1.5.4",
+    "jsqr": "1.4.0"
+  },
+  "streams": [
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "markerWidth": 240,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.474,
+      "cleanMarkerDecoded": false,
+      "mediaProfile": "upload-source",
+      "videoBytes": 1112537,
+      "videoSha256": "019c60092a1b4a58d884e4f634849d832f7a11fb17271b0019de1d867295c3f6",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "markerWidth": 240,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.474,
+      "cleanMarkerDecoded": false,
+      "mediaProfile": "local-crf27",
+      "videoBytes": 682709,
+      "videoSha256": "a2eec11f98c7a6e8707ad028dac7544d30b937a28449d7da4e3a1accb7fb3c0e",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "markerWidth": 240,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.474,
+      "cleanMarkerDecoded": false,
+      "mediaProfile": "local-crf35",
+      "videoBytes": 421736,
+      "videoSha256": "f380653c84f9ac968d9dd83d22bccf3da907b4e79fecc340d2c9c741641ab733",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "markerWidth": 240,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.211,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "upload-source",
+      "videoBytes": 1034258,
+      "videoSha256": "edd80526445c07f8a70567047bfad1f66a5854e85c0ceb69ca2fe4652f1cfd2a",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "markerWidth": 240,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.211,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf27",
+      "videoBytes": 631625,
+      "videoSha256": "ffb2a72c56fcbcafce3d2b064bd588418b802f20b9db46ad04b35bee196fccde",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "markerWidth": 240,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.211,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf35",
+      "videoBytes": 384595,
+      "videoSha256": "77b9ffbcc6310714d266a66610f03cdd82c509eed500de467e4d67aed2db3017",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "static-260",
+      "transport": "static",
+      "markerWidth": 260,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.68,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "upload-source",
+      "videoBytes": 1174300,
+      "videoSha256": "0099980d8f07e6cd5ac3522be2f26f07f046325233ec06c4473448d37dd22660",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-260",
+      "transport": "static",
+      "markerWidth": 260,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.68,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf27",
+      "videoBytes": 731578,
+      "videoSha256": "5eca4b7f8725177df3363dc9ba90a23958010dc4f3c461e619f39ad6a037517d",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-260",
+      "transport": "static",
+      "markerWidth": 260,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.68,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf35",
+      "videoBytes": 443251,
+      "videoSha256": "d71771aaf64f37e284327b8a917a67809384ae92f804218a8283a649c6893756",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "animated-260",
+      "transport": "animated",
+      "markerWidth": 260,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.561,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "upload-source",
+      "videoBytes": 1055692,
+      "videoSha256": "c082dbd7b8991d04775d1d44ddec8aa57d0b7ae93b27ee1aab9d2aaf02d5cc6e",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-260",
+      "transport": "animated",
+      "markerWidth": 260,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.561,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf27",
+      "videoBytes": 639806,
+      "videoSha256": "3f212a4ed76460b24bd99e69694130a9df9675cdf780bcf0c296ff25042f390f",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-260",
+      "transport": "animated",
+      "markerWidth": 260,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.561,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf35",
+      "videoBytes": 389874,
+      "videoSha256": "5ce480770cca0c9b053169693ba9e5c5d33aa2b40692dd015c28e43dca7c20b3",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "static-280",
+      "transport": "static",
+      "markerWidth": 280,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.887,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "upload-source",
+      "videoBytes": 1185008,
+      "videoSha256": "32ccf7849ffa340e707cf9e3ac1df17b978244f09ead6419808d05e7fdb9824b",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-280",
+      "transport": "static",
+      "markerWidth": 280,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.887,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf27",
+      "videoBytes": 742574,
+      "videoSha256": "d50d7ff3f469bee1470ab14c7393716206b5445ec5db8ce29155b37feda67c60",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-280",
+      "transport": "static",
+      "markerWidth": 280,
+      "qrVersion": 18,
+      "qrModules": 89,
+      "modulesWithQuietZone": 97,
+      "nominalPixelsPerModule": 2.887,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf35",
+      "videoBytes": 457661,
+      "videoSha256": "72fc7c79af1e3a28c3ab05e2d94d6fca06cfe6b40bf2e2ce7e86017f82eba8fe",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "animated-280",
+      "transport": "animated",
+      "markerWidth": 280,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.912,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "upload-source",
+      "videoBytes": 1024806,
+      "videoSha256": "9d012feda8c8c0e121917430e393aac83587fe18f7b41c9aa4177372c51a9cd5",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-280",
+      "transport": "animated",
+      "markerWidth": 280,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.912,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf27",
+      "videoBytes": 627521,
+      "videoSha256": "051df81c30fa30f945f4c82c9f990bd51de6fe105b4d1317d2ba77eb5eecba54",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-280",
+      "transport": "animated",
+      "markerWidth": 280,
+      "qrVersion": 8,
+      "qrModules": 49,
+      "modulesWithQuietZone": 57,
+      "nominalPixelsPerModule": 4.912,
+      "cleanMarkerDecoded": true,
+      "mediaProfile": "local-crf35",
+      "videoBytes": 391707,
+      "videoSha256": "de7e6113b76ae9a8db8cfd263ce3ef736909a0f1f4b7e00e03238e9b124cc10f",
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    }
+  ],
+  "interpretation": {
+    "threshold": [
+      {
+        "markerWidth": 240,
+        "mediaProfile": "upload-source",
+        "staticRecoveryRate": 0,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 1
+      },
+      {
+        "markerWidth": 240,
+        "mediaProfile": "local-crf27",
+        "staticRecoveryRate": 0,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 1
+      },
+      {
+        "markerWidth": 240,
+        "mediaProfile": "local-crf35",
+        "staticRecoveryRate": 0,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 1
+      },
+      {
+        "markerWidth": 260,
+        "mediaProfile": "upload-source",
+        "staticRecoveryRate": 1,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 0
+      },
+      {
+        "markerWidth": 260,
+        "mediaProfile": "local-crf27",
+        "staticRecoveryRate": 1,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 0
+      },
+      {
+        "markerWidth": 260,
+        "mediaProfile": "local-crf35",
+        "staticRecoveryRate": 1,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 0
+      },
+      {
+        "markerWidth": 280,
+        "mediaProfile": "upload-source",
+        "staticRecoveryRate": 1,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 0
+      },
+      {
+        "markerWidth": 280,
+        "mediaProfile": "local-crf27",
+        "staticRecoveryRate": 1,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 0
+      },
+      {
+        "markerWidth": 280,
+        "mediaProfile": "local-crf35",
+        "staticRecoveryRate": 1,
+        "animatedRecoveryRate": 1,
+        "animatedMinusStatic": 0
+      }
+    ],
+    "smallestWidthWithBothReliable": 260,
+    "smallestWidthWithAnimatedReliable": 240,
+    "summary": "BBP/1 maintained at least 95% recovery through CRF 35 at 240 px; both transports reached the same bar at 260 px. The tested crossover lies between those widths on a real browser carrier.",
+    "platformRoundTrips": "complete",
+    "platformResultPaths": [
+      "benchmarks/platform-roundtrips/youtube.json",
+      "benchmarks/platform-roundtrips/discord.json"
+    ],
+    "platforms": [
+      "youtube",
+      "discord"
+    ],
+    "platformSummary": "YouTube and Discord introduced no additional recovery failures in the tested return paths."
+  }
+}

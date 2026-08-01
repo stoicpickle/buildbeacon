@@ -1,0 +1,289 @@
+{
+  "schemaVersion": 1,
+  "experiment": "BuildBeacon real-footage platform round trip",
+  "platform": "discord",
+  "analyzedAt": "2026-08-01T03:38:14.787Z",
+  "sourceManifestSha256": "d817333439c42a7b4b450a3066375144c6b540deb0cd326f4b2020ada6410a6e",
+  "results": [
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "markerWidth": 240,
+      "uploadSha256": "019c60092a1b4a58d884e4f634849d832f7a11fb17271b0019de1d867295c3f6",
+      "returnedFilename": "buildbeacon-static-240.mp4",
+      "returnedSha256": "723753964cffa30248de9464845dcf4e6043956a39ff6de76ebb6ca595424ab7",
+      "byteIdenticalToUpload": false,
+      "uploadVideoStreamSha256": "37dacca53d3d57bf6d649edef8c1a55bab663976a7ba334290b9b0f97bbfe0f0",
+      "returnedVideoStreamSha256": "37dacca53d3d57bf6d649edef8c1a55bab663976a7ba334290b9b0f97bbfe0f0",
+      "videoStreamIdenticalToUpload": true,
+      "returnedBytes": 1112537,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "markerWidth": 240,
+      "uploadSha256": "edd80526445c07f8a70567047bfad1f66a5854e85c0ceb69ca2fe4652f1cfd2a",
+      "returnedFilename": "buildbeacon-animated-240.mp4",
+      "returnedSha256": "81b4f384fcb3d02ed9dca3e76a8c09541b31520608cb2baf36ef4c1674f0e173",
+      "byteIdenticalToUpload": false,
+      "uploadVideoStreamSha256": "2146b9a40d7feccc697a388ea43fb8a678b1ebd1336aa6e58267897bc6d8ca1b",
+      "returnedVideoStreamSha256": "2146b9a40d7feccc697a388ea43fb8a678b1ebd1336aa6e58267897bc6d8ca1b",
+      "videoStreamIdenticalToUpload": true,
+      "returnedBytes": 1034258,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "static-260",
+      "transport": "static",
+      "markerWidth": 260,
+      "uploadSha256": "0099980d8f07e6cd5ac3522be2f26f07f046325233ec06c4473448d37dd22660",
+      "returnedFilename": "buildbeacon-static-260.mp4",
+      "returnedSha256": "ade34e04b27fbe9cda834c4320c13f34a9759b7dedceb6a63eff5114e01636c7",
+      "byteIdenticalToUpload": false,
+      "uploadVideoStreamSha256": "a4c50f51a70819d88f9d7bddbff3cc84e724714872b91a405200fa39bdd26727",
+      "returnedVideoStreamSha256": "a4c50f51a70819d88f9d7bddbff3cc84e724714872b91a405200fa39bdd26727",
+      "videoStreamIdenticalToUpload": true,
+      "returnedBytes": 1174300,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "animated-260",
+      "transport": "animated",
+      "markerWidth": 260,
+      "uploadSha256": "c082dbd7b8991d04775d1d44ddec8aa57d0b7ae93b27ee1aab9d2aaf02d5cc6e",
+      "returnedFilename": "buildbeacon-animated-260.mp4",
+      "returnedSha256": "a4f03e497d5d3debd46b6da6a87fb1cddb3d628e740c0a8aeb76ee351488dcbf",
+      "byteIdenticalToUpload": false,
+      "uploadVideoStreamSha256": "216541a5b46fac03e43ac4f16ee4fd18c6ed6caaabf59ddd485f2f1f6c16636a",
+      "returnedVideoStreamSha256": "216541a5b46fac03e43ac4f16ee4fd18c6ed6caaabf59ddd485f2f1f6c16636a",
+      "videoStreamIdenticalToUpload": true,
+      "returnedBytes": 1055692,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "static-280",
+      "transport": "static",
+      "markerWidth": 280,
+      "uploadSha256": "32ccf7849ffa340e707cf9e3ac1df17b978244f09ead6419808d05e7fdb9824b",
+      "returnedFilename": "buildbeacon-static-280.mp4",
+      "returnedSha256": "a1b6e1415f17c64ff964530f258cfd0701492638afe6f821088b2b4b3e52b8c4",
+      "byteIdenticalToUpload": false,
+      "uploadVideoStreamSha256": "b6fcede4a4cfc786dddeca2d5220d8b7e753edc2b19ebc613a278ac3d570a672",
+      "returnedVideoStreamSha256": "b6fcede4a4cfc786dddeca2d5220d8b7e753edc2b19ebc613a278ac3d570a672",
+      "videoStreamIdenticalToUpload": true,
+      "returnedBytes": 1185008,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 0,
+          "p95RecoverySeconds": 0.125,
+          "failures": {},
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "animated-280",
+      "transport": "animated",
+      "markerWidth": 280,
+      "uploadSha256": "9d012feda8c8c0e121917430e393aac83587fe18f7b41c9aa4177372c51a9cd5",
+      "returnedFilename": "buildbeacon-animated-280.mp4",
+      "returnedSha256": "43140667ed341eb2578f666bb71c1f83eb8f6055de8335076f0984fd357ddaff",
+      "byteIdenticalToUpload": false,
+      "uploadVideoStreamSha256": "1e28f9a67904d7f62aca418a4f4e66706d9497ffce9635fb6b96a1d100bbf99b",
+      "returnedVideoStreamSha256": "1e28f9a67904d7f62aca418a4f4e66706d9497ffce9635fb6b96a1d100bbf99b",
+      "videoStreamIdenticalToUpload": true,
+      "returnedBytes": 1024806,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.75,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    }
+  ]
+}
