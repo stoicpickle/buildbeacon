@@ -33,6 +33,8 @@
     "README.md",
     "SECURITY.md",
     "THIRD_PARTY_NOTICES",
+    "benchmarks/beacon-bench.json",
+    "docs/BEACON_BENCH.md",
     "docs/PROTOCOL.md",
     "docs/THREAT_MODEL.md"
   ],
@@ -45,10 +47,12 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
+    "bench": "tsx scripts/beacon-bench.ts",
     "demo:fixture": "tsx scripts/generate-demo-fixture.ts",
     "demo:verify": "tsx scripts/verify-demo-fixture.ts",
-    "lint": "oxlint src --deny-warnings",
-    "check": "npm run lint && npm run test:coverage && npm run build",
+    "lint": "oxlint src scripts --deny-warnings",
+    "typecheck:scripts": "tsc -p tsconfig.scripts.json",
+    "check": "npm run lint && npm run typecheck:scripts && npm run test:coverage && npm run build",
     "preview": "vite preview",
     "cli": "tsx src/cli.ts"
   },

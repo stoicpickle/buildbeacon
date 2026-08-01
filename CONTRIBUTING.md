@@ -40,6 +40,8 @@ npm audit --audit-level=high
 git diff --check
 ```
 
+Run `npm run bench` as well when a change affects QR density, media encoding, receiver sampling, transport recovery, or a claim in [`docs/BEACON_BENCH.md`](docs/BEACON_BENCH.md). Generated videos and frames are temporary; only the compact JSON result and Markdown report belong in the repository.
+
 ## Protocol compatibility
 
 Fail closed. If a change alters canonical receipt bytes, envelope signing semantics, mask derivation, or frame parsing, introduce the appropriate new version and golden vector rather than silently changing version 1.
