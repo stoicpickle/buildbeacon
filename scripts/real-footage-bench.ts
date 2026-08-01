@@ -145,6 +145,67 @@ interface PlatformAnalysis {
   }>
 }
 
+type PlayerCondition = 'p100' | 's75' | 's50' | 'c-safe' | 'c-edge'
+
+interface ScreencastFrameIndex {
+  filename: string
+  metadata: { timestamp: number }
+}
+
+interface PlayerCaptureManifest {
+  schemaVersion: 1
+  experiment: string
+  browser: { family: string; version: string; platform: string }
+  viewport: { width: number; height: number; devicePixelRatio: number; scrollX: number; scrollY: number }
+  player: {
+    cssRect: { x: number; y: number; width: number; height: number }
+    crop: { x: number; y: number; width: number; height: number }
+    sourceVideo: { width: number; height: number }
+    playbackRate: number
+  }
+  capture: { method: string; format: string; quality: number; maxWidth: number; maxHeight: number; everyNthFrame: number }
+  cases: Array<{
+    testId: string
+    frameCount: number
+    firstTimestamp: number
+    lastTimestamp: number
+    totalVideoFrames: number
+    droppedVideoFrames: number
+  }>
+  privacy: string
+}
+
+interface PlayerCaptureResult {
+  testId: string
+  transport: Transport
+  condition: PlayerCondition
+  dimensions: { width: number; height: number }
+  transformation: string
+  nominalMarkerPixels: number
+  sampledFrames: number
+  qrDecodedFrames: number
+  qrDecodeRate: number
+  cells: CellResult[]
+}
+
+interface PlayerCaptureReport {
+  schemaVersion: 1
+  benchmark: string
+  generatedAt: string
+  question: string
+  fixture: PlatformManifest['fixture']
+  capture: PlayerCaptureManifest & { manifestSha256: string; caseSha256: Record<string, string> }
+  config: {
+    excerptSeconds: number
+    sampleFps: number
+    erasureProbabilities: readonly number[]
+    frameStarts: string
+    scaler: string
+  }
+  results: PlayerCaptureResult[]
+  interpretation: { summary: string; stoppingRulePassed: boolean }
+}
+
 const ROOT = resolve(import.meta.dirname, '..')
 const ENVELOPE_PATH = join(ROOT, 'examples', 'demo', 'signed-receipt.bb')
 const OUTPUT_ROOT = join(ROOT, 'bench-results', 'real-footage')
@@ -152,6 +213,8 @@ const UPLOAD_ROOT = join(OUTPUT_ROOT, 'uploads')
 const JSON_OUTPUT = join(ROOT, 'benchmarks', 'real-footage-bench.json')
 const MANIFEST_OUTPUT = join(ROOT, 'benchmarks', 'platform-roundtrip-manifest.json')
 const PUBLISHED_PLATFORM_ROOT = join(ROOT, 'benchmarks', 'platform-roundtrips')
+const PLAYER_CAPTURE_JSON_OUTPUT = join(ROOT, 'benchmarks', 'player-visible-pixels.json')
+const PLAYER_CAPTURE_MARKDOWN_OUTPUT = join(ROOT, 'docs', 'PLAYER_VISIBLE_PIXELS.md')
 const MARKDOWN_OUTPUT = join(ROOT, 'docs', 'REAL_FOOTAGE_BENCH.md')
 const CONTACT_SHEET_OUTPUT = join(ROOT, 'docs', 'assets', 'real-footage-carrier.jpg')
 const MARKER_WIDTHS = [240, 260, 280] as const
@@ -943,6 +1006,240 @@ async function analyzePlatform(platform: string, directory: string): Promise<voi
   }
 }
 
+const PLAYER_CONDITIONS: Array<{
+  id: PlayerCondition
+  width: number
+  height: number
+  nominalMarkerPixels: number
+  filter: string
+  transformation: string
+}> = [
+  { id: 'p100', width: 1_280, height: 720, nominalMarkerPixels: 240, filter: '', transformation: 'Canonical 1280×720 player-visible master' },
+  { id: 's75', width: 960, height: 540, nominalMarkerPixels: 180, filter: 'scale=960:540:flags=lanczos', transformation: '75% Lanczos scale' },
+  { id: 's50', width: 640, height: 360, nominalMarkerPixels: 120, filter: 'scale=640:360:flags=lanczos', transformation: '50% Lanczos scale' },
+  { id: 'c-safe', width: 1_232, height: 672, nominalMarkerPixels: 240, filter: 'crop=1232:672:0:0', transformation: 'Remove 48 px from right and bottom; no resize' },
+  { id: 'c-edge', width: 1_200, height: 640, nominalMarkerPixels: 216, filter: 'crop=1200:640:0:0', transformation: 'Remove 80 px from right and bottom; clips 24 px from marker edges' },
+]
+
+async function captureCaseSha256(directory: string, frames: ScreencastFrameIndex[]): Promise<string> {
+  const hash = createHash('sha256')
+  hash.update(await readFile(join(directory, 'frames.json')))
+  for (const frame of frames) hash.update(await readFile(join(directory, frame.filename)))
+  return hash.digest('hex')
+}
+
+async function writeScreencastConcat(directory: string, frames: ScreencastFrameIndex[], output: string): Promise<void> {
+  if (frames.length < 2) throw new Error(`Capture ${directory} has fewer than two frames`)
+  const lines: string[] = []
+  for (let index = 0; index < frames.length; index += 1) {
+    lines.push(`file '${join(directory, frames[index]!.filename)}'`)
+    if (index < frames.length - 1) {
+      const duration = frames[index + 1]!.metadata.timestamp - frames[index]!.metadata.timestamp
+      if (!(duration > 0 && duration < 2)) throw new Error(`Invalid screencast frame duration at ${directory}/${index}: ${duration}`)
+      lines.push(`duration ${duration.toFixed(6)}`)
+    }
+  }
+  lines.push(`file '${join(directory, frames.at(-1)!.filename)}'`)
+  await writeFile(output, `${lines.join('\n')}\n`)
+}
+
+function validatePlayerCaptureManifest(capture: PlayerCaptureManifest): void {
+  if (capture.schemaVersion !== 1) throw new Error(`Unsupported player capture schema: ${String(capture.schemaVersion)}`)
+  if (capture.player.sourceVideo.width !== 1_280 || capture.player.sourceVideo.height !== 720 || capture.player.playbackRate !== 1) {
+    throw new Error('Player capture must declare a 1280×720 source at 1× playback')
+  }
+  const crop = capture.player.crop
+  const cropValues = [crop.x, crop.y, crop.width, crop.height]
+  if (!cropValues.every(Number.isInteger) || crop.x < 0 || crop.y < 0 || crop.width <= 0 || crop.height <= 0
+    || crop.x + crop.width > capture.viewport.width || crop.y + crop.height > capture.viewport.height) {
+    throw new Error('Player crop must be positive integer coordinates within the captured viewport')
+  }
+  const testIds = capture.cases.map((candidate) => candidate.testId)
+  if (new Set(testIds).size !== testIds.length || !TRANSPORTS.every((transport) => testIds.includes(`${transport}-240`))) {
+    throw new Error('Player capture must contain unique static-240 and animated-240 cases')
+  }
+}
+
+function validateScreencastFrames(
+  testId: string,
+  frames: ScreencastFrameIndex[],
+  manifestCase: PlayerCaptureManifest['cases'][number],
+): void {
+  if (frames.length < 2 || manifestCase.frameCount !== frames.length) throw new Error(`Capture manifest mismatch for ${testId}`)
+  const filenames = frames.map((frame) => frame.filename)
+  if (new Set(filenames).size !== filenames.length
+    || filenames.some((filename) => basename(filename) !== filename || !filename.toLowerCase().endsWith('.jpg'))) {
+    throw new Error(`${testId} contains duplicate, nested, or non-JPEG frame names`)
+  }
+  const firstTimestamp = frames[0]!.metadata.timestamp
+  const lastTimestamp = frames.at(-1)!.metadata.timestamp
+  if (manifestCase.firstTimestamp !== firstTimestamp || manifestCase.lastTimestamp !== lastTimestamp) {
+    throw new Error(`${testId} frame timestamps do not match the capture manifest`)
+  }
+  if (lastTimestamp - firstTimestamp < CARRIER_SECONDS) throw new Error(`${testId} spans less than ${CARRIER_SECONDS} seconds`)
+  for (let index = 1; index < frames.length; index += 1) {
+    const gap = frames[index]!.metadata.timestamp - frames[index - 1]!.metadata.timestamp
+    if (!(gap > 0 && gap < 2)) throw new Error(`${testId} has an invalid frame gap at index ${index}: ${gap}`)
+  }
+}
+
+async function decodePlayerCondition(
+  concatInput: string,
+  capture: PlayerCaptureManifest,
+  condition: (typeof PLAYER_CONDITIONS)[number],
+  directory: string,
+): Promise<Array<string | undefined>> {
+  await mkdir(directory, { recursive: true })
+  const crop = capture.player.crop
+  const filters = [
+    `crop=${crop.width}:${crop.height}:${crop.x}:${crop.y}`,
+    'scale=1280:720:flags=lanczos',
+    condition.filter,
+    `fps=${SAMPLE_FPS}`,
+  ].filter(Boolean).join(',')
+  run('ffmpeg', [
+    '-hide_banner', '-loglevel', 'error', '-y', '-f', 'concat', '-safe', '0', '-i', concatInput,
+    '-t', String(CARRIER_SECONDS), '-vf', filters, '-fps_mode', 'vfr', join(directory, 'frame-%04d.png'),
+  ])
+  const frameNames = (await readdir(directory)).filter((name) => name.endsWith('.png')).sort()
+  const decoded: Array<string | undefined> = []
+  for (const frameName of frameNames) decoded.push(decodePng(await readFile(join(directory, frameName))))
+  return decoded
+}
+
+function playerResult(report: PlayerCaptureReport, transport: Transport, condition: PlayerCondition, erasure: number): CellResult {
+  const result = report.results.find((candidate) => candidate.transport === transport && candidate.condition === condition)
+  const cell = result?.cells.find((candidate) => candidate.erasureProbability === erasure)
+  if (!cell) throw new Error(`Missing player result ${transport}/${condition}/${erasure}`)
+  return cell
+}
+
+function makePlayerCaptureMarkdown(report: PlayerCaptureReport): string {
+  const lines = [
+    '# YouTube Player Visible-Pixels Experiment',
+    '',
+    `**Question:** ${report.question}`,
+    '',
+    `**Bottom line:** ${report.interpretation.summary}`,
+    '',
+    'This experiment captures the rendered YouTube watch-page viewport through Chrome’s tab screencast path. The analyzer crops the visible 16:9 player pixels, normalizes them once to 1280×720, and evaluates deterministic scale and crop derivatives. It does not inspect or decode the downloaded platform file.',
+    '',
+    '## Six-second recovery',
+    '',
+    'Each cell is successful overlapping six-second windows out of all 8 fps sample-aligned starts. The first value uses no simulated erasure; the parenthesized value uses one deterministic 25% post-decode sample-erasure realization.',
+    '',
+    '| Condition | Visible transformation | Static BBR1 | Animated BBP/1 |',
+    '|---|---|---:|---:|',
+  ]
+  for (const condition of PLAYER_CONDITIONS) {
+    const staticZero = playerResult(report, 'static', condition.id, 0)
+    const staticLoss = playerResult(report, 'static', condition.id, 0.25)
+    const animatedZero = playerResult(report, 'animated', condition.id, 0)
+    const animatedLoss = playerResult(report, 'animated', condition.id, 0.25)
+    lines.push(`| ${condition.id} (${condition.width}×${condition.height}) | ${condition.transformation} | ${staticZero.successes}/${staticZero.excerpts} (${staticLoss.successes}/${staticLoss.excerpts}) | ${animatedZero.successes}/${animatedZero.excerpts} (${animatedLoss.successes}/${animatedLoss.excerpts}) |`)
+  }
+  lines.push(
+    '',
+    '## Fixed conditions',
+    '',
+    `- Browser: ${report.capture.browser.family} ${report.capture.browser.version} on ${report.capture.browser.platform}; viewport ${report.capture.viewport.width}×${report.capture.viewport.height}, DPR ${report.capture.viewport.devicePixelRatio}.`,
+    `- YouTube player source resolution: ${report.capture.player.sourceVideo.width}×${report.capture.player.sourceVideo.height} at ${report.capture.player.playbackRate.toFixed(1)}×; both playthroughs reported zero dropped video frames.`,
+    `- Capture: ${report.capture.capture.method}, ${report.capture.capture.format.toUpperCase()} quality ${report.capture.capture.quality}; raw viewport frames and private watch-page identifiers remain ignored locally.`,
+    `- Player crop: ${report.capture.player.crop.width}×${report.capture.player.crop.height} at (${report.capture.player.crop.x}, ${report.capture.player.crop.y}), normalized with ${report.config.scaler}.`,
+    `- Receiver: full derivative frames sampled at ${report.config.sampleFps} fps; every sample-aligned ${report.config.excerptSeconds}-second window; exact envelope equality plus Ed25519 verification required.`,
+    '',
+    '## Reproducibility boundary',
+    '',
+    '- The analyzer is public (`npm run bench:player -- CAPTURE_DIRECTORY`), and this report pins the private capture manifest and frame-set hashes.',
+    '- The historical raw viewport capture is not public because it contains account and unlisted-watch-page context. Therefore the checked-in result can be audited, but that exact historical analysis cannot be rerun from this repository alone.',
+    '- A future public capture fixture should contain player-only pixels and a documented capture producer before this row is described as independently reproducible.',
+    '',
+    '## Limits',
+    '',
+    '- This is one Chrome version, one display scale, one YouTube rendition, one account, and one tab-screencast implementation.',
+    '- Chrome tab screencast pixels are composited browser output, but they are not an operating-system framebuffer recording and do not include browser-window occlusion.',
+    '- The overlapping windows are not independent videos. The 25% condition is deterministic post-decode sample erasure, not measured platform frame loss.',
+    '- Static 240 was already unreadable before upload, so its failure cannot be attributed to YouTube or the screen-capture path.',
+    '- Adaptive codec changes, different display scaling, player sizing, OS recorders, cursor or control overlays, stalls, editing, and repost chains remain untested.',
+    '- Raw watch-page frames are intentionally excluded from the public repository because they can contain account and unlisted-video context.',
+    '',
+    'Machine-readable results: [player-visible-pixels.json](../benchmarks/player-visible-pixels.json). Related upload/download evidence: [Platform Round Trips](PLATFORM_ROUND_TRIPS.md).',
+  )
+  return `${lines.join('\n')}\n`
+}
+
+async function analyzePlayerCapture(directory: string): Promise<void> {
+  const capture = JSON.parse(await readFile(join(directory, 'capture-manifest.json'), 'utf8')) as PlayerCaptureManifest
+  validatePlayerCaptureManifest(capture)
+  const envelope = new Uint8Array(await readFile(ENVELOPE_PATH))
+  const source = await BeaconSource.create(envelope, BLOCK_SIZE)
+  const staticText = `BBR1:${base64UrlEncode(envelope)}`
+  const temporaryDirectory = await mkdtemp(join(tmpdir(), 'buildbeacon-player-capture-'))
+  try {
+    const results: PlayerCaptureResult[] = []
+    const caseSha256: Record<string, string> = {}
+    for (const transport of TRANSPORTS) {
+      const testId = `${transport}-240`
+      const frameDirectory = join(directory, 'raw', testId)
+      const frames = JSON.parse(await readFile(join(frameDirectory, 'frames.json'), 'utf8')) as ScreencastFrameIndex[]
+      const manifestCase = capture.cases.find((candidate) => candidate.testId === testId)
+      if (!manifestCase) throw new Error(`Capture manifest missing ${testId}`)
+      validateScreencastFrames(testId, frames, manifestCase)
+      if (manifestCase.droppedVideoFrames !== 0) throw new Error(`${testId} reported dropped video frames`)
+      caseSha256[testId] = await captureCaseSha256(frameDirectory, frames)
+      const concatInput = join(temporaryDirectory, `${testId}.ffconcat`)
+      await writeScreencastConcat(frameDirectory, frames, concatInput)
+      for (const condition of PLAYER_CONDITIONS) {
+        process.stdout.write(`player: ${testId} / ${condition.id} ... `)
+        const decodedFrames = await decodePlayerCondition(concatInput, capture, condition, join(temporaryDirectory, `${testId}-${condition.id}`))
+        const cells: CellResult[] = []
+        for (const erasure of ERASURE_RATES) cells.push(await evaluateCell(transport, decodedFrames, erasure, envelope, source.id, staticText))
+        results.push({
+          testId,
+          transport,
+          condition: condition.id,
+          dimensions: { width: condition.width, height: condition.height },
+          transformation: condition.transformation,
+          nominalMarkerPixels: condition.nominalMarkerPixels,
+          sampledFrames: decodedFrames.length,
+          qrDecodedFrames: decodedFrames.filter(Boolean).length,
+          qrDecodeRate: round(decodedFrames.filter(Boolean).length / decodedFrames.length),
+          cells,
+        })
+        console.log('done')
+      }
+    }
+    const animatedP100 = results.find((candidate) => candidate.transport === 'animated' && candidate.condition === 'p100')!
+    const animatedP100Zero = animatedP100.cells.find((candidate) => candidate.erasureProbability === 0)!
+    const stoppingRulePassed = animatedP100Zero.recoveryRate >= 0.95
+    const successfulAnimatedConditions = PLAYER_CONDITIONS.filter((condition) => {
+      return results.find((candidate) => candidate.transport === 'animated' && candidate.condition === condition.id)!.cells.find((cell) => cell.erasureProbability === 0)!.recoveryRate >= 0.95
+    }).map((condition) => condition.id)
+    const summary = stoppingRulePassed
+      ? `Under this exact Chrome, YouTube rendition, display, and tab-capture path, animated 240 recovered from ${animatedP100Zero.successes}/${animatedP100Zero.excerpts} tested six-second P100 windows. Conditions meeting the 95% zero-erasure bar: ${successfulAnimatedConditions.join(', ') || 'none'}.`
+      : `Animated 240 recovered from only ${animatedP100Zero.successes}/${animatedP100Zero.excerpts} tested six-second P100 windows. The stopping rule failed; diagnose the player and capture path before making a transformation claim.`
+    const report: PlayerCaptureReport = {
+      schemaVersion: 1,
+      benchmark: 'YouTube Player Visible-Pixels Experiment',
+      generatedAt: new Date().toISOString(),
+      question: 'Can the signed receipt be recovered from six-second fragments of the visible pixels rendered by the YouTube player, and where do scale or edge crops break it?',
+      fixture: { receiptId: source.id, envelopeBytes: envelope.length, sourceBlocks: source.blockCount, blockSize: source.blockSize },
+      capture: { ...capture, manifestSha256: await sha256File(join(directory, 'capture-manifest.json')), caseSha256 },
+      config: { excerptSeconds: EXCERPT_SECONDS, sampleFps: SAMPLE_FPS, erasureProbabilities: ERASURE_RATES, frameStarts: 'all-8fps-sample-aligned', scaler: 'Lanczos to 1280×720' },
+      results,
+      interpretation: { summary, stoppingRulePassed },
+    }
+    await writeFile(PLAYER_CAPTURE_JSON_OUTPUT, `${JSON.stringify(report, null, 2)}\n`)
+    await writeFile(PLAYER_CAPTURE_MARKDOWN_OUTPUT, makePlayerCaptureMarkdown(report))
+    console.log(JSON.stringify({
+      outputs: ['benchmarks/player-visible-pixels.json', 'docs/PLAYER_VISIBLE_PIXELS.md'],
+      interpretation: report.interpretation,
+    }, null, 2))
+  } finally {
+    await rm(temporaryDirectory, { recursive: true, force: true })
+  }
+}
+
 async function main(): Promise<void> {
   if (process.argv[2] === '--analyze-platform') {
     const platform = process.argv[3]
@@ -951,7 +1248,13 @@ async function main(): Promise<void> {
     await analyzePlatform(platform, resolve(directory))
     return
   }
-  if (process.argv.length > 2) throw new Error('Unknown arguments. Run without arguments, or use --analyze-platform <platform-slug> <download-directory>.')
+  if (process.argv[2] === '--analyze-player-capture') {
+    const directory = process.argv[3]
+    if (!directory) throw new Error('Usage: real-footage-bench.ts --analyze-player-capture <capture-directory>')
+    await analyzePlayerCapture(resolve(directory))
+    return
+  }
+  if (process.argv.length > 2) throw new Error('Unknown arguments. Run without arguments, use --analyze-platform, or use --analyze-player-capture.')
   await runExperiment()
 }
 
