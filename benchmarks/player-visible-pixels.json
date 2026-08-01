@@ -1,0 +1,559 @@
+{
+  "schemaVersion": 1,
+  "benchmark": "YouTube Player Visible-Pixels Experiment",
+  "generatedAt": "2026-08-01T15:22:17.546Z",
+  "question": "Can the signed receipt be recovered from six-second fragments of the visible pixels rendered by the YouTube player, and where do scale or edge crops break it?",
+  "fixture": {
+    "receiptId": "6b3ba041e95d4a51da0da0f55965bf1d",
+    "envelopeBytes": 403,
+    "sourceBlocks": 7,
+    "blockSize": 64
+  },
+  "capture": {
+    "schemaVersion": 1,
+    "experiment": "BuildBeacon YouTube player visible-pixels capture",
+    "browser": {
+      "family": "Chrome",
+      "version": "151.0.0.0",
+      "platform": "macOS"
+    },
+    "viewport": {
+      "width": 2044,
+      "height": 944,
+      "devicePixelRatio": 2,
+      "scrollX": 0,
+      "scrollY": 0
+    },
+    "player": {
+      "cssRect": {
+        "x": 16,
+        "y": 68,
+        "width": 1433.90625,
+        "height": 806.5703125
+      },
+      "crop": {
+        "x": 16,
+        "y": 68,
+        "width": 1434,
+        "height": 806
+      },
+      "sourceVideo": {
+        "width": 1280,
+        "height": 720
+      },
+      "playbackRate": 1
+    },
+    "capture": {
+      "method": "Chrome DevTools Protocol Page.startScreencast",
+      "format": "jpeg",
+      "quality": 95,
+      "maxWidth": 2044,
+      "maxHeight": 944,
+      "everyNthFrame": 1
+    },
+    "cases": [
+      {
+        "testId": "static-240",
+        "frameCount": 162,
+        "firstTimestamp": 1785596840.996726,
+        "lastTimestamp": 1785596853.518452,
+        "totalVideoFrames": 369,
+        "droppedVideoFrames": 0
+      },
+      {
+        "testId": "animated-240",
+        "frameCount": 198,
+        "firstTimestamp": 1785596795.591776,
+        "lastTimestamp": 1785596807.969442,
+        "totalVideoFrames": 368,
+        "droppedVideoFrames": 0
+      }
+    ],
+    "privacy": "Unlisted URLs, video IDs, and account identifiers intentionally omitted.",
+    "manifestSha256": "66fc50c5b77fba22831e3934aa343e40e606a515b2ea3ce359d3cb819950ec0e",
+    "caseSha256": {
+      "static-240": "c39a67d7ea55448356bfb026943e911e6ea9f8010eee35d64ce615a964d64ab4",
+      "animated-240": "c78d661fc6f6afb98b5d9773ddd4067b28e5a872430e9302b323a9ca1159fda8"
+    }
+  },
+  "config": {
+    "excerptSeconds": 6,
+    "sampleFps": 8,
+    "erasureProbabilities": [
+      0,
+      0.25
+    ],
+    "frameStarts": "all-8fps-sample-aligned",
+    "scaler": "Lanczos to 1280×720"
+  },
+  "results": [
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "condition": "p100",
+      "dimensions": {
+        "width": 1280,
+        "height": 720
+      },
+      "transformation": "Canonical 1280×720 player-visible master",
+      "nominalMarkerPixels": 240,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "condition": "s75",
+      "dimensions": {
+        "width": 960,
+        "height": 540
+      },
+      "transformation": "75% Lanczos scale",
+      "nominalMarkerPixels": 180,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "condition": "s50",
+      "dimensions": {
+        "width": 640,
+        "height": 360
+      },
+      "transformation": "50% Lanczos scale",
+      "nominalMarkerPixels": 120,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "condition": "c-safe",
+      "dimensions": {
+        "width": 1232,
+        "height": 672
+      },
+      "transformation": "Remove 48 px from right and bottom; no resize",
+      "nominalMarkerPixels": 240,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "static-240",
+      "transport": "static",
+      "condition": "c-edge",
+      "dimensions": {
+        "width": 1200,
+        "height": 640
+      },
+      "transformation": "Remove 80 px from right and bottom; clips 24 px from marker edges",
+      "nominalMarkerPixels": 216,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "condition": "p100",
+      "dimensions": {
+        "width": 1280,
+        "height": 720
+      },
+      "transformation": "Canonical 1280×720 player-visible master",
+      "nominalMarkerPixels": 240,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 91,
+      "qrDecodeRate": 0.9479,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.875,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 5,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "condition": "s75",
+      "dimensions": {
+        "width": 960,
+        "height": 540
+      },
+      "transformation": "75% Lanczos scale",
+      "nominalMarkerPixels": 180,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 96,
+      "qrDecodeRate": 1,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.875,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 5,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "condition": "s50",
+      "dimensions": {
+        "width": 640,
+        "height": 360
+      },
+      "transformation": "50% Lanczos scale",
+      "nominalMarkerPixels": 120,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 92,
+      "qrDecodeRate": 0.9583,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.875,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 5,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "condition": "c-safe",
+      "dimensions": {
+        "width": 1232,
+        "height": 672
+      },
+      "transformation": "Remove 48 px from right and bottom; no resize",
+      "nominalMarkerPixels": 240,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 91,
+      "qrDecodeRate": 0.9479,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 4.875,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 49,
+          "recoveryRate": 1,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": 3.875,
+          "p95RecoverySeconds": 5,
+          "failures": {},
+          "medianUniquePackets": 9,
+          "medianFinalRank": 7
+        }
+      ]
+    },
+    {
+      "testId": "animated-240",
+      "transport": "animated",
+      "condition": "c-edge",
+      "dimensions": {
+        "width": 1200,
+        "height": 640
+      },
+      "transformation": "Remove 80 px from right and bottom; clips 24 px from marker edges",
+      "nominalMarkerPixels": 216,
+      "sampledFrames": 96,
+      "qrDecodedFrames": 0,
+      "qrDecodeRate": 0,
+      "cells": [
+        {
+          "erasureProbability": 0,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 0,
+          "realizedErasureRate": 0,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        },
+        {
+          "erasureProbability": 0.25,
+          "excerpts": 49,
+          "successes": 0,
+          "recoveryRate": 0,
+          "eligibleObservations": 2352,
+          "erasedObservations": 584,
+          "realizedErasureRate": 0.2483,
+          "medianRecoverySeconds": null,
+          "p95RecoverySeconds": null,
+          "failures": {
+            "unreadable-marker": 49
+          },
+          "medianUniquePackets": null,
+          "medianFinalRank": null
+        }
+      ]
+    }
+  ],
+  "interpretation": {
+    "summary": "Under this exact Chrome, YouTube rendition, display, and tab-capture path, animated 240 recovered from 49/49 tested six-second P100 windows. Conditions meeting the 95% zero-erasure bar: p100, s75, s50, c-safe.",
+    "stoppingRulePassed": true
+  }
+}

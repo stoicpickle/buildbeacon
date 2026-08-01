@@ -36,12 +36,15 @@
     "benchmarks/beacon-bench.json",
     "benchmarks/platform-roundtrip-manifest.json",
     "benchmarks/platform-roundtrips",
+    "benchmarks/player-visible-pixels.json",
     "benchmarks/real-footage-bench.json",
     "docs/BEACON_BENCH.md",
     "docs/PLATFORM_ROUND_TRIPS.md",
+    "docs/PLAYER_VISIBLE_PIXELS.md",
     "docs/REAL_FOOTAGE_BENCH.md",
     "docs/assets/real-footage-carrier.jpg",
     "docs/PROTOCOL.md",
+    "docs/TEST_MATRIX.md",
     "docs/THREAT_MODEL.md"
   ],
   "scripts": {
@@ -56,6 +59,7 @@
     "bench": "tsx scripts/beacon-bench.ts",
     "bench:real": "tsx scripts/real-footage-bench.ts",
     "bench:platform": "tsx scripts/real-footage-bench.ts --analyze-platform",
+    "bench:player": "tsx scripts/real-footage-bench.ts --analyze-player-capture",
     "demo:fixture": "tsx scripts/generate-demo-fixture.ts",
     "demo:verify": "tsx scripts/verify-demo-fixture.ts",
     "lint": "oxlint src scripts --deny-warnings",

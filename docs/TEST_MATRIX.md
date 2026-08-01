@@ -1,6 +1,6 @@
 # Public test matrix
 
-This is the evidence boundary for BuildBeacon 0.1 as of 2026-07-31. A green row supports only the stated condition.
+This is the evidence boundary for BuildBeacon 0.1 as of 2026-08-01. A green row supports only the stated condition.
 
 | Surface | Condition | Result | Reproduce |
 |---|---|---:|---|
@@ -21,6 +21,11 @@ This is the evidence boundary for BuildBeacon 0.1 as of 2026-07-31. A green row 
 | Equal-footprint lab | 240 px, 6 s, 2 Hz marker, H.264 CRF 18→27 and CRF 18→35, 25% configured sample-erasure probability | BBR1 0/49; BBP/1 49/49 in both transcodes | `npm run bench` |
 | Equal-footprint lab | 280 px and 320 px under the same six-second conditions | BBR1 49/49; BBP/1 49/49 in every cell | `npm run bench` |
 | Collection-time lab | 320 px, 3 s, sequence 73, H.264 CRF 18→27, 25% configured sample-erasure probability | BBR1 73/73; BBP/1 8/73 | `npm run bench` |
+| YouTube file round trip | one downloaded 720p rendition, all 8 fps sample-aligned 6 s starts, 25% configured sample erasure | 240 px BBR1 0/49; 240 px BBP/1 49/49; both 49/49 at 260/280 px | `npm run bench:platform -- youtube PATH` |
+| Discord attachment round trip | one private attachment-download path under the same matrix | same recovery as upload source; H.264 stream bytes unchanged | `npm run bench:platform -- discord PATH` |
+| YouTube player pixels | Chrome tab screencast, canonical 1280×720 player crop, all 8 fps sample-aligned 6 s starts | 240 px BBR1 0/49; 240 px BBP/1 49/49 | Analyzer: `npm run bench:player -- CAPTURE_DIRECTORY`; historical raw input is private |
+| YouTube player scaling | canonical crop scaled to 960×540 and 640×360 | BBP/1 49/49 at both sizes | Analyzer only; machine-readable result checked in |
+| YouTube player edge crop | remove 48 px vs 80 px from right and bottom | BBP/1 49/49 with marker intact; 0/49 after clipping 24 px from marker edges | Analyzer only; machine-readable result checked in |
 
 Protocol coverage is gated at 80% statements, 70% branches, 80% functions, and 80% lines. The recorded 2026-07-31 run reached 85.18% statements, 72.38% branches, 95.91% functions, and 96.00% lines.
 
@@ -30,9 +35,10 @@ Beacon Bench enumerates all sample-aligned starts in one 12-second carrier. Its 
 
 No public claim is made yet for:
 
-- a specific social platform’s recompression pipeline;
-- marker sizes below 240 pixels or between the tested 240/280/320-pixel points at 720p;
-- partial cropping that leaves only part of the QR;
+- other YouTube renditions, accounts, player sizes, adaptive codec switches, or broad YouTube/Discord behavior;
+- operating-system framebuffer recording, browser-window occlusion, handheld capture, or mobile playback;
+- marker sizes below the effective 120 px animated case or untested points between current boundaries;
+- crop patterns other than the documented right/bottom cuts;
 - blur, glare, perspective distortion, or handheld capture distances;
 - codecs other than the checked-in H.264 fixture;
 - browser engines outside the Chromium CI lane;
