@@ -60,7 +60,7 @@ npm run bench:real
 Six exact upload artifacts and their SHA-256 hashes are recorded in [`../benchmarks/platform-roundtrip-manifest.json`](../benchmarks/platform-roundtrip-manifest.json). Completed return paths: YouTube and Discord. Analyze another returned set with:
 
 ```sh
-npm run bench:platform -- <platform-slug> /absolute/path/to/download-directory
+npm run bench:platform -- PLATFORM_SLUG /absolute/path/to/DOWNLOAD_DIRECTORY
 ```
 
 The analyzer hashes every returned file, scans whole frames, verifies recovered signed bytes, publishes a compact result under `benchmarks/platform-roundtrips/`, and updates this report. See [Platform Round Trips](PLATFORM_ROUND_TRIPS.md) and the machine-readable [YouTube](../benchmarks/platform-roundtrips/youtube.json), [Discord](../benchmarks/platform-roundtrips/discord.json).

@@ -600,7 +600,7 @@ function makeMarkdown(report: BenchmarkReport): string {
       : `Six exact upload artifacts and their SHA-256 hashes are recorded in [\`../benchmarks/platform-roundtrip-manifest.json\`](../benchmarks/platform-roundtrip-manifest.json). Completed return paths: ${platformNames}. Analyze another returned set with:`,
     '',
     '```sh',
-    'npm run bench:platform -- <platform-slug> /absolute/path/to/download-directory',
+    'npm run bench:platform -- PLATFORM_SLUG /absolute/path/to/DOWNLOAD_DIRECTORY',
     '```',
     '',
     completedPlatforms.length === 0
