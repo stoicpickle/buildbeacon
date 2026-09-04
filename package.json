@@ -69,7 +69,7 @@
     "cli": "tsx src/cli.ts"
   },
   "dependencies": {
-    "@noble/ed25519": "^3.1.0",
+    "@noble/ed25519": "^3.2.0",
     "cbor2": "^2.2.1",
     "jsqr": "^1.4.0",
     "qrcode": "^1.5.4",
